@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DLI Search Tool - Canada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+      .container-search{
+      width:100%;}
+       
+
+        .search-container {
+            background: transparent;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            
+        }
+
+        .form-grid {
+            display: flex;
+            gap: 20px;
+         
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 280px;
+        }
+
+        .form-group label {
+            display: none;
+        }
+
+        .form-select {
+            padding: 20px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            background: #ffffff;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 20px;
+            padding-right: 55px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .form-select:focus {
+            outline: none;
+            background: #ffffff;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .form-select:disabled {
+            background: #ffffff;
+            cursor: not-allowed;
+            opacity: 1;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 20px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 180px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-search {
+            background: white;
+            color: #e74c3c;
+            border: 2px solid #ffffff;
+        }
+
+        .btn-search:hover:not(:disabled) {
+            background: #e74c3c;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-search:disabled {
+            background: #f5f5f5;
+            color: #bbb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-reset {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(149, 165, 166, 0.3);
+        }
+
+        .results {
+            background: transparent;
+            border-radius: 15px;
+            overflow: hidden;
+            
+            display: none;
+        }
+
+        .results-header {
+            background: #e74c3c;
+            color: white;
+            padding: 20px 25px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .results-list {
+            padding: 0;
+        }
+
+        .result-item {
+            display: flex;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            background: white;
+            transition: transform 0.2s ease;
+        }
+
+        .result-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .pgwp-status {
+            background: #27ae60;
+            color: white;
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .pgwp-status.no {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .pgwp-label {
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .pgwp-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .institution-content {
+            flex: 1;
+            padding: 25px 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .institution-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .institution-details {
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-right: 10px;
+            min-width: 80px;
+        }
+
+        .detail-value {
+            color: #666;
+        }
+
+        .branches-count {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        .campus-list {
+            margin-top: 15px;
+        }
+
+        .campus-item {
+            padding: 8px 0;
+            border-left: 3px solid #f0f0f0;
+            padding-left: 15px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .campus-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .campus-location {
+            color: #999;
+            margin-left: 5px;
+        }
+
+        .apply-section {
+            background: #f5f5f5;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .apply-text {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .apply-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .apply-btn:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        .no-results {
+            padding: 50px 25px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container-search {
+                padding: 15px;
+            }
+
+            .search-container {
+                padding: 20px 10px;
+            }
+
+            .form-grid {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+
+            .form-group {
+                min-width: 100%;
+                max-width: 350px;
+            }
+
+            .form-select {
+                padding: 18px 22px;
+                padding-right: 50px;
+                font-size: 15px;
+                max-width:100%;
+            }
+
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                padding: 18px 35px;
+            }
+
+            .result-item {
+                flex-direction: column;
+            }
+            
+            .pgwp-status {
+                min-width: 100%;
+                padding: 20px;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .institution-content {
+                padding: 20px;
+            }
+            
+            .apply-section {
+                min-width: 100%;
+                padding: 20px;
+            }
+            
+            .campus-list {
+                margin-top: 10px;
+            }
+            
+            .campus-item {
+                padding: 6px 0;
+                padding-left: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-search">
+        <div class="search-container">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="province">Select Province:</label>
+                    <select id="province" class="form-select" aria-label="Select Province">
+                        <option value="">All Provinces</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="institution">Select Institution:</label>
+                    <select id="institution" class="form-select" disabled aria-label="Select Institution">
+                        <option value="">Institute</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button id="searchBtn" class="btn btn-search" disabled>Search Now →</button>
+                <button id="resetBtn" class="btn btn-reset">Reset</button>
+            </div>
+        </div>
+
+        <div id="results" class="results">
+            <div class="results-header">
+                <span id="resultsCount">Search Results</span>
+            </div>
+            <div id="resultsList" class="results-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // Load DLI Data externally
+        let dliData = {};
+        
+        // Load data from external JSON file
+        fetch('https://raw.githubusercontent.com/zahisial/stepup/main/dli-data.json')
+            .then(response => response.json())
+            .then(data => {
+                // Transform data structure
+                Object.keys(data.provinces).forEach(province => {
+                    const provinceData = data.provinces[province];
+                    if (Array.isArray(provinceData)) {
+                        dliData[province] = provinceData;
+                    } else if (provinceData.institutions) {
+                        dliData[province] = provinceData.institutions;
+                    } else {
+                        dliData[province] = [];
+                    }
+                });
+                
+                // Initialize UI after data loads
+                populateProvinces();
+            })
+            .catch(error => {
+                console.error('Error loading DLI data:', error);
+                document.getElementById('resultsList').innerHTML = 
+                    '<div class="loading">Error loading data. Please refresh the page.</div>';
+            });
+
+        // DOM Elements
+        const provinceSelect = document.getElementById('province');
+        const institutionSelect = document.getElementById('institution');
+        const searchBtn = document.getElementById('searchBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const results = document.getElementById('results');
+        const resultsCount = document.getElementById('resultsCount');
+        const resultsList = document.getElementById('resultsList');
+
+        // Populate province dropdown (only show provinces with data)
+        function populateProvinces() {
+            Object.keys(dliData).forEach(province => {
+                if (dliData[province] && dliData[province].length > 0) {
+                    const option = document.createElement('option');
+                    option.value = province;
+                    option.textContent = province;
+                    provinceSelect.appendChild(option);
+                }
+            });
+        }
+
+        // Get unique institution names
+        function getUniqueInstitutions(institutions) {
+            const uniqueNames = [...new Set(institutions.map(inst => inst.name))];
+            return uniqueNames.sort();
+        }
+
+        // Populate institution dropdown
+        function populateInstitutions(province) {
+            institutionSelect.innerHTML = '<option value="">Institute</option>';
+            
+            if (province && dliData[province] && dliData[province].length > 0) {
+                const institutions = getUniqueInstitutions(dliData[province]);
+                institutions.forEach(institution => {
+                    const option = document.createElement('option');
+                    option.value = institution;
+                    option.textContent = institution;
+                    institutionSelect.appendChild(option);
+                });
+                institutionSelect.disabled = false;
+            } else if (province && dliData[province] && dliData[province].length === 0) {
+                institutionSelect.innerHTML = '<option value="">Data coming soon for ' + province + '</option>';
+                institutionSelect.disabled = true;
+            } else {
+                institutionSelect.disabled = true;
+            }
+            updateSearchButton();
+        }
+
+        // Update search button state
+        function updateSearchButton() {
+            if (provinceSelect.value && institutionSelect.value) {
+                searchBtn.disabled = false;
+            } else {
+                searchBtn.disabled = true;
+            }
+        }
+
+        // Display search results
+        function displayResults(searchResults, provinceName) {
+            resultsCount.textContent = `Search Results (${searchResults.length} found)`;
+            resultsList.innerHTML = '';
+
+            if (searchResults.length === 0) {
+                resultsList.innerHTML = '<div class="no-results">No institutions found matching your criteria.</div>';
+            } else {
+                const groupedResults = {};
+                searchResults.forEach(institution => {
+                    if (!groupedResults[institution.name]) {
+                        groupedResults[institution.name] = [];
+                    }
+                    groupedResults[institution.name].push(institution);
+                });
+
+                Object.keys(groupedResults).forEach(institutionName => {
+                    const institutions = groupedResults[institutionName];
+                    const mainInstitution = institutions[0];
+                    const branchCount = institutions.length;
+                    
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    
+                    const isPGWPEligible = mainInstitution.pgwp.toLowerCase().includes('yes');
+                    const pgwpStatusClass = isPGWPEligible ? '' : 'no';
+                    const pgwpValue = isPGWPEligible ? 'Yes' : 'No';
+                    
+                    const campusList = institutions.map(inst => {
+                        const campusNames = inst.campuses.split(',').map(campus => campus.trim());
+                        return campusNames.map(campus => 
+                            `<div class="campus-item">
+                                <span class="campus-name">${campus}</span>
+                                <span class="campus-location">${inst.city}</span>
+                            </div>`
+                        ).join('');
+                    }).join('');
+                    
+                    resultItem.innerHTML = `
+                        <div class="pgwp-status ${pgwpStatusClass}">
+                            <div class="pgwp-label">Offers PGWP</div>
+                            <div class="pgwp-value">${pgwpValue}</div>
+                        </div>
+                        
+                        <div class="institution-content">
+                            <div class="institution-title">${institutionName}</div>
+                            
+                            <div class="institution-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Province:</span>
+                                    <span class="detail-value">${provinceName}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Branches:</span>
+                                    <span class="detail-value branches-count">${branchCount}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">DLI Number:</span>
+                                    <span class="detail-value">${mainInstitution.dli}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="campus-list">
+                                ${campusList}
+                            </div>
+                        </div>
+                        
+                        <div class="apply-section">
+                            <div class="apply-text">${isPGWPEligible ? 'Apply now reach out to us and we will help you' : 'We have some alternative'}</div>
+                            <a href="#contact-us-form-bottom"  class="apply-btn">Apply Now →</a>
+                        </div>
+                    `;
+                    
+                    resultsList.appendChild(resultItem);
+                });
+            }
+
+            results.style.display = 'block';
+            results.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Perform search
+        function performSearch() {
+            const selectedProvince = provinceSelect.value;
+            const selectedInstitution = institutionSelect.value;
+
+            if (!selectedProvince || !selectedInstitution) {
+                alert('Please select both province and institution');
+                return;
+            }
+
+            if (!dliData[selectedProvince] || dliData[selectedProvince].length === 0) {
+                displayResults([], selectedProvince);
+                return;
+            }
+
+            const searchResults = dliData[selectedProvince].filter(
+                inst => inst.name === selectedInstitution
+            );
+
+            displayResults(searchResults, selectedProvince);
+        }
+
+        // Reset form
+        function resetForm() {
+            provinceSelect.value = '';
+            institutionSelect.value = '';
+            institutionSelect.disabled = true;
+            searchBtn.disabled = true;
+            results.style.display = 'none';
+        }
+
+        // Attach event listeners
+        provinceSelect.addEventListener('change', function() {
+            const selectedProvince = this.value;
+            institutionSelect.value = '';
+            results.style.display = 'none';
+            populateInstitutions(selectedProvince);
+        });
+
+        institutionSelect.addEventListener('change', function() {
+            updateSearchButton();
+        });
+
+        searchBtn.addEventListener('click', performSearch);
+        resetBtn.addEventListener('click', resetForm);
+
+        // Allow Enter key to trigger search
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !searchBtn.disabled) {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>
